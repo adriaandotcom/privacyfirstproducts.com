@@ -1,12 +1,17 @@
 {
   "name": "privacyfirstproducts.com",
   "version": "1.0.0",
-  "description": "",
+  "description": "The list for privacy first products",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon -e js,sql",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "keywords": ["privacy", "list"],
+  "author": "Adriaan van Rossum",
+  "dependencies": {
+    "dotenv": "^6.1.0",
+    "glob": "^7.1.3",
+    "pg": "^7.6.1"
+  }
 }
