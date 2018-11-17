@@ -2,9 +2,11 @@ const { end } = require.main.require('./services/utils')
 const { generateHTML } = require.main.require('./services/utils')
 
 module.exports = {
-  get: (req, res) => {
+  get: async (req, res) => {
 
-    const template = generateHTML()
+    const { email } = req.user
+    const template = generateHTML({ email })
+
     const html = `
       <form method="post">
         <h2 class="mb-4">Signup</h2>
@@ -22,6 +24,6 @@ module.exports = {
       </form>
     `
 
-    return end(req, res, 200, template  + html)
+    return end(req, res, 200, template)
   }
 }

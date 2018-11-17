@@ -37,7 +37,7 @@ const getPost = req => {
   })
 }
 
-const generateHTML = () => {
+const generateHTML = (context = {}) => {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -88,6 +88,7 @@ const generateHTML = () => {
 
 <header>
   <h1>Privacy First Products</h1>
+  ${context.email ? `<p>Logged in as ${context.email}</p>` : ''}
 </header>
 
 <script async src="https://cdn.simpleanalytics.io/hello.js"></script>

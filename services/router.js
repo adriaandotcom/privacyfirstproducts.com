@@ -1,6 +1,17 @@
 const url = require('url')
+const jwt = require('jsonwebtoken')
 
 const { end, options } = require.main.require('./services/utils')
+
+const parseCookies = cookieHeader => {
+  const list = {}
+  cookieHeader && cookieHeader.split(';').forEach(function (cookie) {
+    const parts = cookie.split('=')
+    list[parts.shift().trim()] = decodeURI(parts.join('='))
+  })
+  return list
+}
+
 
 module.exports.default = async (req, res, routes) => {
   const method = req.method.toLowerCase()
@@ -14,6 +25,15 @@ module.exports.default = async (req, res, routes) => {
     // Get the path without a beginning and trailing slash
     let { pathname: path } = url.parse(req.url)
     path = (path.replace(/[/]+$/, '') || '/index').substr(1)
+
+    const { token } = parseCookies(req.headers.cookie)
+
+    try {
+      const { data: email } = jwt.verify(token, process.env.JWT_SECRET)
+      if (email) req.user = { email }
+    } catch(err) {
+      // Do nothing
+    }
 
     // Run functions corresponding to request
     const route = routes[path]

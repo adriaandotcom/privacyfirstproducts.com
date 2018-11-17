@@ -1,6 +1,5 @@
 const url = require('url')
 const jwt = require('jsonwebtoken')
-const crypto = require('crypto')
 
 const { end, getPost, generateHTML } = require.main.require('./services/utils')
 const { send } = require.main.require('./services/mailgun')
@@ -38,17 +37,21 @@ module.exports = {
     if (!rows.length) return end(req, res, 401, `${template}<div class="alert alert-danger" role="alert">User token is invalid, try again</div>${form}`)
     const { email } = rows[0]
 
-    const hash = crypto.createHmac('sha256', process.env.JWT_SECRET).update(email).digest('hex');
+    const expireSeconds = 60 * 60 * 24 * 90
 
     const jwtToken = jwt.sign({
-      exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 90),
-      data: hash
+      exp: Math.floor(Date.now() / 1000) + (expireSeconds),
+      data: email
     }, process.env.JWT_SECRET)
 
-    console.log(jwtToken)
+    const now = new Date()
+    const time = now.getTime()
+    now.setTime(time + expireSeconds * 1000)
 
-    // login
-    return end(req, res, 200, template + form + jwtToken)
+    res.writeHead(302, {
+      'Set-Cookie': `token=${jwtToken};expires=${now.toGMTString()};path=/`,
+      Location: '/' })
+    return res.end()
   },
 
   post: async (req, res) => {
