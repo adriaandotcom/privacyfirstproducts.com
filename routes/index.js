@@ -50,7 +50,7 @@ module.exports = {
       categoryElement.addEventListener('click', function(event) {
         event.preventDefault();
         document.querySelectorAll('.category').forEach(function(cardElement) { cardElement.style.display = 'none' })
-        document.querySelectorAll('[data-category').forEach(function(linkElement) { linkElement.classList.remove('active') })
+        document.querySelectorAll('[data-category]').forEach(function(linkElement) { linkElement.classList.remove('active') })
         categoryElement.classList.add('active');
         var selector = event.target.getAttribute('data-category')
         document.querySelectorAll(selector).forEach(function(cardElement) { cardElement.style.display = 'block' })
