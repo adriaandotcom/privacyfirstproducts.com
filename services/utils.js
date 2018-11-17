@@ -48,6 +48,9 @@ const generateHTML = (context = {}) => {
   <title>Privacy First Products</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="What we are creating is a list of products where you can publicly see what other people are saying about it. We also add features to help upcoming privacy loyal businesses so they can share and communicate about their product.">
+  <meta name="og:image" content="https://assets.adriaan.io/images/maker/social-media.png">
+  <meta name="twitter:image" content="https://assets.adriaan.io/images/maker/social-media.png">
   <script>
     NodeList.prototype.forEach = Array.prototype.forEach;
     HTMLCollection.prototype.forEach = Array.prototype.forEach;
