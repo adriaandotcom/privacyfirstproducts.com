@@ -3,7 +3,8 @@ const { generateHTML } = require.main.require('./services/utils')
 
 module.exports = {
   get: async (req, res) => {
-    const { email } = req.user
+
+    const email = (req.user && req.user.email) ? req.user.email : null
     const template = generateHTML({ email })
 
     const html = `
