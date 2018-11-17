@@ -2,8 +2,9 @@ const { end, getPost, generateHTML } = require.main.require('./services/utils')
 const { pool } = require.main.require('./db')
 
 const form = `
-  <form method="post">
-    <h2 class="mb-4">Register</h2>
+  <form method="post" class="auth">
+    <h2 class="mb-4 fat">Register.</h2>
+    <p class="mb-4">Contribute to others. Thank you.</p>
     <div class="form-group">
       <label for="nameField">Full name</label>
       <input name="name" type="text" class="form-control" id="nameField" placeholder="Enter full name...">
@@ -14,7 +15,7 @@ const form = `
       <input name="email" type="email" class="form-control" id="emailField" placeholder="Enter email address...">
       <small class="form-text text-muted">We use this to send you a magic link to login.</small>
     </div>
-    <button type="submit" class="btn btn-primary">Register</button>
+    <button type="submit" class="btn my-primary">Register</button>
   </form>`
 
 const template = generateHTML()

@@ -57,6 +57,7 @@ const generateHTML = (context = {}) => {
   html, body {
     margin: 0;
     padding: 0;
+    min-height: 100%;
   }
   body {
     display: flex;
@@ -70,6 +71,11 @@ const generateHTML = (context = {}) => {
   h1, h2, p {
     word-break: break-word;
     margin-top: 0;
+  }
+  h2.fat {
+    font-size: 55px;
+    color: #001836;
+    font-weight: bold;
   }
   header {
     background: white;
@@ -93,11 +99,6 @@ const generateHTML = (context = {}) => {
   }
   header h1 a:hover {
     text-decoration: none;
-  }
-  header h2 {
-    font-size: 55px;
-    color: #001836;
-    font-weight: bold;
   }
   header > div:first-of-type {
     flex: 1;
@@ -168,6 +169,21 @@ const generateHTML = (context = {}) => {
   }
   a.btn-group:hover {
     text-decoration: none;
+  }
+  form.auth {
+    width: 270px;
+    margin-top: 100px;
+  }
+  form.auth button.btn {
+    width: 100%;
+  }
+  .my-primary {
+    color: white;
+    background-color: #6bb8ff;
+  }
+  .my-primary:focus, .my-primary:hover{
+    color: white;
+    background-color: #50a7f7;
   }
   </style>
 </head>

@@ -6,14 +6,15 @@ const { send } = require.main.require('./services/mailgun')
 const { pool } = require.main.require('./db')
 
 const form = `
-  <form method="post">
-    <h2 class="mb-4">Login</h2>
+
+  <form method="post" class="auth">
+    <h2 class="mb-4 fat">Login.</h2>
     <div class="form-group">
       <label for="emailField">Email address</label>
       <input name="email" type="email" class="form-control" id="emailField" placeholder="Enter email address...">
       <small class="form-text text-muted">You will receive a magic link by email.</small>
     </div>
-    <button type="submit" class="btn btn-primary">Login</button>
+    <button type="submit" class="btn my-primary">Login</button>
   </form>`
 
 const template = generateHTML()

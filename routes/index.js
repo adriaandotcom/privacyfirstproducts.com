@@ -29,7 +29,7 @@ module.exports = {
       <header style="background-image: url('https://assets.adriaan.io/images/maker/privacy-image.svg');">
         <div>
           <h1><a href="/">PRIVACY FIRST PRODUCTS</a></h1>
-          <h2>Talk about products<br>that care about you.</h2>
+          <h2 class="fat">Talk about products<br>that care about you.</h2>
         </div>
       </header>
     </div>
