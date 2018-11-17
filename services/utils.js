@@ -132,7 +132,7 @@ const generateHTML = (context = {}) => {
     border: none;
     transition: transform 100ms ease-in;
   }
-  .card:hover {
+  .card--scale:hover {
     transform: scale(1.02);
   }
   nav {
@@ -185,6 +185,19 @@ const generateHTML = (context = {}) => {
     color: white;
     background-color: #50a7f7;
   }
+  .active.color-analytics { background-color: #c600ff; color: white; }
+  .active.color-browser { background-color: #ff2dad; color: white; }
+  .active.color-comments { background-color: #00ceff; color: white; }
+  .active.color-email { background-color: #ffd200; color: black; }
+  .active.color-email-client { background-color: #0068de; color: white; }
+  .active.color-home-automation { background-color: #c600ff; color: white; }
+  .active.color-messaging { background-color: #ff2dad; color: white; }
+  .active.color-password-manager { background-color: #00ceff; color: white; }
+  .active.color-productivity { background-color: #ffd200; color: black; }
+  .active.color-search { background-color: #0068de; color: white; }
+  .active.color-shortener { background-color: #c600ff; color: white; }
+  .active.color-social-network { background-color: #ff2dad; color: white; }
+  .active.color-vpn { background-color: #00ceff; color: white; }
   </style>
 </head>
 <body>

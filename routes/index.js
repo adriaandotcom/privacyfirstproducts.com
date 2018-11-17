@@ -40,7 +40,7 @@ module.exports = {
 
     html += `<div class="row"><ul class="catagories">`
     for (const { category, slug } of categories) {
-      html += `<li data-category=".category-${slug}">${category}</li>`
+      html += `<li class="color-${slug}" data-category=".category-${slug}">${category}</li>`
     }
     html += `</ul>
     </div>
@@ -50,17 +50,34 @@ module.exports = {
       categoryElement.addEventListener('click', function(event) {
         event.preventDefault();
         document.querySelectorAll('.category').forEach(function(cardElement) { cardElement.style.display = 'none' })
+        document.querySelectorAll('[data-category').forEach(function(linkElement) { linkElement.classList.remove('active') })
+        categoryElement.classList.add('active');
         var selector = event.target.getAttribute('data-category')
         document.querySelectorAll(selector).forEach(function(cardElement) { cardElement.style.display = 'block' })
       }, false);
     })
     </script>
 
+    <script>
+      (function(d, h, m){
+          var js, fjs = d.getElementsByTagName(h)[0];
+          if (d.getElementById(m)){return;}
+          js = d.createElement(h); js.id = m;
+          js.onload = function(){
+              window.makerWidgetComInit({
+              position: "left",
+              widget: "igom8zmnjqiw4j9a-sjqgxiv8mcrjzg7o-umfh055vfpvpu2wn"
+          })};
+          js.src = "https://makerwidget.com/js/embed.js";
+          fjs.parentNode.insertBefore(js, fjs)
+        }(document, "script", "dhm"))
+      </script>
+
     <div class="row" style="min-height: 800px;">`
 
     for (const product of rows) {
       html += `<div class="col-md-4 category category-${product.category_slug}">
-        <div class="card mb-4">
+        <div class="card card--scale mb-4">
           ${ product.image ? `<a href="/products/${product.slug}" class="card-img-top" style="height: 225px; background-size: cover; background-position: center center; background-image: url('${product.image}')"></a>` : `<a href="/products/${product.slug}"><img class="card-img-top" data-src="holder.js/100px225?theme=thumb&bg=f0f9ff&fg=55595c&text=${product.name}" alt="${product.name}"></a>` }
           <div class="card-body">
             <p class="card-text" style="min-height: 48px;">${ product.description ? product.description : '&nbsp;' }</p>

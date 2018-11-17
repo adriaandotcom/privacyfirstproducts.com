@@ -15,7 +15,9 @@ const form = `
       <small class="form-text text-muted">You will receive a magic link by email.</small>
     </div>
     <button type="submit" class="btn my-primary">Login</button>
-  </form>`
+  </form>
+
+  <p class="mt-4 small text-muted">or <a href="/">return to the homepage</a></p>`
 
 const template = generateHTML()
 

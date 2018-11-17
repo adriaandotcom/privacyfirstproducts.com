@@ -40,11 +40,13 @@ module.exports = {
 
         <script src="https://cdn.rawgit.com/imsky/holder/master/holder.js"></script>
         <div class="container"><div class="row"><div class="col-md-7 col-sm-12">
-          <h2>${product.name}</h2>
-          <p>${product.description}</p>
+          <p class="mt-4 small text-muted">← <a href="/">homepage</a></p>
+          <h2 class="fat mt-4">${product.name}</h2>
+          <p style="font-size: 120%;">${product.description}</p>
           ${ product.image ? `<div class="card" style="width: 350px;"><div class="card-img-top"><img style="max-width: 100%;" src="${product.image}" alt="product.name"></div></div>` : `` }
 
-        <h2 class="mt-5" id="comments">Comments</h2>
+
+        <p class="mt-5" id="comments" style="font-size: 120%;">Comments</p>
       `
 
       const { rows: comments } = await pool.query(commentsQuery, [product.id])
@@ -57,7 +59,7 @@ module.exports = {
           <div class="form-group">
             <textarea name="comment" class="form-control" id="commentBox1343" rows="4"></textarea>
           </div>
-          <button type="submit" class="btn btn-primary">Save comment</button>
+          <button type="submit" class="btn my-primary">Save comment</button>
         </form>
 
         ` : `<p>You need to be <a href="/login">logged in</a> to comment.</p>` }
@@ -83,7 +85,6 @@ module.exports = {
           }, false);
         })
         </script>
-
       `
 
       return end(req, res, 200, template + html)
@@ -144,7 +145,7 @@ const getCommentsHTML = (comments) => {
         <form style="display: none;" class="text-right" method="post" id="form-${comment.id}">
           <input type="hidden" name="original_id" value="${comment.id}">
           <textarea name="comment" class="form-control mt-2" id="commentBox1343" rows="3"></textarea>
-          <button type="submit" class="mt-2 btn">Save comment</button>
+          <button type="submit" class="mt-2 btn my-primary">Save comment</button>
         </form>
       </div>
     </div>`
