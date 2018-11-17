@@ -23,7 +23,6 @@ module.exports = {
 
         <h5 class="mt-5">Can I add my project?</h5>
         <p>Contact us to get yourself listed via <a href="mailto:adriaan@privacyfirstproducts.com">adriaan@privacyfirstproducts.com</a>. Make sure to attach an image of your logo (700 x 350px) which should be on a non-white background. Be sure to have registered on the platform with as many founder/creators of your product and link them in the email. Write a non-marketing description so we can use that on our website. All information provided we can change to match our quality standards.</p>
-
       </div>
     </div>
     `
