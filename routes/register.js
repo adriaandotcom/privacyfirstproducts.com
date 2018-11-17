@@ -13,9 +13,9 @@ const form = `
     <div class="form-group">
       <label for="emailField">Email address</label>
       <input name="email" type="email" class="form-control" id="emailField" placeholder="Enter email address...">
-      <small class="form-text text-muted">You will receive a magic link by email to login.</small>
+      <small class="form-text text-muted">We use this to send you a magic link to login.</small>
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary">Register</button>
   </form>`
 
 const template = generateHTML()

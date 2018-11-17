@@ -6,7 +6,7 @@ const end = (req, res, code = 400, body, contentType = 'text/html') => {
   res.setHeader('content-type', contentType)
   let { pathname } = url.parse(req.url)
 
-  if (code >= 300) console.error(pathname, code, JSON.stringify(body))
+  if (code >= 300) console.error(pathname, code)
   else console.error(pathname, code)
 
   switch (contentType) {

@@ -1,6 +1,5 @@
 const { end } = require.main.require('./services/utils')
 const { generateHTML } = require.main.require('./services/utils')
-const { description } = require.main.require('./package.json')
 
 module.exports = {
   get: (req, res) => {
