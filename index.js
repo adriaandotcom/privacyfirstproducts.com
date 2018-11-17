@@ -5,7 +5,7 @@ require('dotenv').config()
 const { default: router } = require.main.require('./services/router')
 const { migrate } = require.main.require('./db')
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3001
 
 glob('./routes/**/*.js', {}, (error, files) => {
   if (error) return console.error(error)

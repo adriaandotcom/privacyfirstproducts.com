@@ -1,11 +1,11 @@
 -- -- Create users table
--- CREATE TABLE IF NOT EXISTS users (
---   id              serial primary key,
---   name            text,
---   email           text not null UNIQUE,
---   -- added           timestamp without time zone default (now() at time zone 'utc'),
---   extra           jsonb
--- );
+CREATE TABLE IF NOT EXISTS users (
+  id              serial primary key,
+  name            text,
+  email           text not null UNIQUE,
+  added           timestamp without time zone default (now() at time zone 'utc'),
+  extra           jsonb
+);
 
 -- Create settings table
 CREATE TABLE IF NOT EXISTS settings (
