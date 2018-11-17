@@ -1,5 +1,4 @@
-const { end, getPost } = require.main.require('./services/utils')
-const { generateHTML } = require.main.require('./services/utils')
+const { end, getPost, generateHTML } = require.main.require('./services/utils')
 const { pool } = require.main.require('./db')
 
 const form = `

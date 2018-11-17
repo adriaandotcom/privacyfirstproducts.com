@@ -1,31 +1,123 @@
 const url = require('url')
+const md5 = require('md5')
 
-const { end, generateHTML } = require.main.require('./services/utils')
+const { end, getPost, generateHTML } = require.main.require('./services/utils')
 const { pool } = require.main.require('./db')
+
+const commentsQuery = `
+SELECT
+    comments.text,
+    comments.created,
+    comments.id,
+    comments.original_id,
+    users.name,
+    originalUsers.name AS orignal_user_name
+FROM
+    comments
+    LEFT JOIN users ON (users.id = comments.user_id)
+    LEFT JOIN comments AS originalComments ON (originalComments.id = comments.original_id)
+    LEFT JOIN users AS originalUsers ON (originalUsers.id = originalComments.user_id)
+WHERE
+    comments.product_id = $1
+ORDER BY
+    comments.created ASC
+`
 
 module.exports = {
   get: async (req, res) => {
-    const email = (req.user && req.user.email) ? req.user.email : null
+    const { email } = (req.user) ? req.user : {}
     const template = generateHTML({ email })
 
     try {
       const { pathname: path } = url.parse(req.url)
       const slug = path.slice(10)
 
-
-      const { rows } = await pool.query('SELECT name, description, url, image, slug FROM products WHERE slug = $1', [slug])
+      const { rows } = await pool.query('SELECT id, name, description, url, image, slug FROM products WHERE slug = $1', [slug])
       if (!rows || !rows[0]) return end(req, res, 404, `${template}<div class="alert alert-warning" role="alert">This product is not found. <a href="/">Go back to the homepage</a>.</div>`)
 
       const product = rows[0]
 
-      let html = `<script src="https://cdn.rawgit.com/imsky/holder/master/holder.js"></script>
-        <div class="container"><div class="row"><div class="col-lg">
+      let html = `
+
+        <script src="https://cdn.rawgit.com/imsky/holder/master/holder.js"></script>
+        <div class="container"><div class="row"><div class="col-md-7 col-sm-12">
           <h2>${product.name}</h2>
           <p>${product.description}</p>
           ${ product.image ? `<div class="card" style="width: 350px;"><div class="card-img-top"><img style="max-width: 100%;" src="${product.image}" alt="product.name"></div></div>` : `` }
-        </div></div></div>`
+
+        <h2 class="mt-5">Comments</h2>
+      `
+
+      const { rows: comments } = await pool.query(commentsQuery, [product.id])
+      if (comments.length) html += getCommentsHTML(comments)
+      else html += `<p>No comments yet. Write you experience if you know this product.</p>`
+
+      html += `${ email ? `
+        <form method="post" class="mt-5">
+          <label for="commentBox1343"><h3>Leave a comment or ask the founder a question</h3></label>
+          <div class="form-group">
+            <textarea name="comment" class="form-control" id="commentBox1343" rows="4"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Save comment</button>
+        </form>
+
+        ` : `<p>You need to be <a href="/login">logged in</a> to comment.</p>` }
+
+        </div></div></div>
+
+        <script>
+        var show = function (elem) { elem.style.display = 'block'; };
+        var hide = function (elem) { elem.style.display = 'none'; };
+        var toggle = function (elem) {
+          if (window.getComputedStyle(elem).display === 'block') {
+            hide(elem);
+            return;
+          }
+          show(elem);
+        }
+
+        document.querySelectorAll('[data-toggle]').forEach(function(toggleElement) {
+          toggleElement.addEventListener('click', function(event) {
+            event.preventDefault();
+            var selector = event.target.getAttribute('data-toggle')
+            toggle(document.querySelector(selector))
+          }, false);
+        })
+        </script>
+
+      `
 
       return end(req, res, 200, template + html)
+    } catch (error) {
+      console.error(error)
+      return end(req, res, 500, `${template}<div class="alert alert-warning" role="alert">Something went wrong. <a href="/">Go back to the homepage</a>.</div>`)
+    }
+  },
+
+  post: async (req, res) => {
+    const { email, id: userId } = (req.user) ? req.user : {}
+    const template = generateHTML({ email })
+
+    try {
+      const { pathname: path } = url.parse(req.url)
+      const slug = path.slice(10)
+      const { rows } = await pool.query('SELECT id FROM products WHERE slug = $1', [slug])
+      const { id: productId } = (rows && rows[0]) ? rows[0] : null
+
+      if (!productId) return end(req, res, 400, `${template}<div class="alert alert-warning" role="alert">Something is going wrong here #noproduct.</div>`)
+      if (!email) return end(req, res, 400, `${template}<div class="alert alert-warning" role="alert">You need to be logged in to comment.</div>`)
+
+      const { comment, original_id: originalId } = await getPost(req)
+
+      if (originalId) {
+        await pool.query('INSERT INTO comments (user_id, original_id, text, product_id) VALUES ($1, $2, $3, $4) RETURNING id', [userId, originalId, comment, productId])
+      } else {
+        const { rows: [ { id: lastCommentId } ] } = await pool.query('INSERT INTO comments (user_id, original_id, text, product_id) VALUES ($1, $2, $3, $4) RETURNING id', [userId, null, comment, productId])
+        await pool.query('UPDATE comments SET original_id = $1 WHERE id = $2', [lastCommentId, lastCommentId])
+      }
+
+      res.writeHead(302, { Location: `/products/${slug}` })
+      return res.end()
     } catch (error) {
       console.error(error)
       return end(req, res, 500, `${template}<div class="alert alert-warning" role="alert">Something went wrong. <a href="/">Go back to the homepage</a>.</div>`)
@@ -33,5 +125,31 @@ module.exports = {
   }
 }
 
-//             ${ product.image ? `<div class="card-img-top" style="width: 100%; height: 100%; background-size: cover; background-position: center center; background-image: url('${product.image}')"></div>` : `<img class="card-img-top" data-src="holder.js/100px225?theme=thumb&bg=f0f9ff&fg=55595c&text=${product.name}" alt="${product.name}">` }
-// </div>
+const getCommentsHTML = (comments) => {
+  let html = ''
+  let deep = 0
+
+  for (const comment of comments) {
+    console.log(comment)
+    const isReply = comment.id != comment.original_id
+    // deep = isReply ? deep + 1 : 0
+
+    const firstLetter = comment.name.slice(0, 1)
+    // const gravatar = `https://www.gravatar.com/avatar/${md5(comment.email.trim().toLowerCase())}?s=130&default=404`
+    const placeholder = `holder.js/64x64?theme=thumb&bg=f0f9ff&fg=55595c&text=${firstLetter}`
+
+    html += `<div id="comment-${comment.id}" class="media mt-3" ${ isReply ? `style="margin-left: ${ Math.min(deep, 2) * 40 }px;"` : '' }>
+      <img class="mr-3" src="${placeholder}" alt="" style="width: 65px; border-radius: 50%;">
+      <div class="media-body">
+        <h5 class="mt-0">${comment.name} <small><a data-toggle="#form-${comment.id}">reply</a></small></h5>
+        <p>${ isReply ? `<a href="#comment-${comment.original_id}" class="badge badge-primary">reply to ${comment.orignal_user_name.split(' ')[0]}</a>` : '' } ${comment.text.split('\n').join('<br>')}</p>
+        <form style="display: none;" class="text-right" method="post" id="form-${comment.id}">
+          <input type="hidden" name="original_id" value="${comment.id}">
+          <textarea name="comment" class="form-control mt-2" id="commentBox1343" rows="3"></textarea>
+          <button type="submit" class="mt-2 btn">Save comment</button>
+        </form>
+      </div>
+    </div>`
+  }
+  return html
+}

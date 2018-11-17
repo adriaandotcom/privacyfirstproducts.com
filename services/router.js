@@ -2,6 +2,7 @@ const url = require('url')
 const jwt = require('jsonwebtoken')
 
 const { end, options } = require.main.require('./services/utils')
+const { pool } = require.main.require('./db')
 
 const parseCookies = cookieHeader => {
   const list = {}
@@ -30,7 +31,8 @@ module.exports.default = async (req, res, routes) => {
 
     try {
       const { data: email } = jwt.verify(token, process.env.JWT_SECRET)
-      if (email) req.user = { email }
+      const { rows } = await pool.query('SELECT id, name, email FROM users WHERE email = $1', [email])
+      if (rows && rows[0] && rows[0].email) req.user = rows[0]
     } catch(err) {
       // Do nothing
     }
