@@ -51,6 +51,7 @@ const generateHTML = (context = {}) => {
   <meta name="description" content="What we are creating is a list of products where you can publicly see what other people are saying about it. We also add features to help upcoming privacy loyal businesses so they can share and communicate about their product.">
   <meta name="og:image" content="https://assets.adriaan.io/images/maker/social-media.png">
   <meta name="twitter:image" content="https://assets.adriaan.io/images/maker/social-media.png">
+  <link rel="shortcut icon" type="image/png" href="https://assets.adriaan.io/images/maker/logo.png"/>
   <script>
     NodeList.prototype.forEach = Array.prototype.forEach;
     HTMLCollection.prototype.forEach = Array.prototype.forEach;
