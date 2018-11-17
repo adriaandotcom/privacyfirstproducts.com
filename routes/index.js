@@ -90,7 +90,7 @@ module.exports = {
               <div class="btn-group">
                 <button type="button" onclick="window.location.href = '${product.url}'" class="btn btn-sm btn-outline-secondary">Website</button>
               </div>
-              <small class="text-muted">${product.number_of_comments} comments</small>
+              <small class="text-muted">${product.number_of_comments} ${ product.number_of_comments === 1 ? 'comment' : 'comments' }</small>
             </div>
           </div>
         </div>
