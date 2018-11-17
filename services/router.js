@@ -35,6 +35,8 @@ module.exports.default = async (req, res, routes) => {
       // Do nothing
     }
 
+    path = (path.slice(0, 9) === 'products/') ? 'products' : path
+
     // Run functions corresponding to request
     const route = routes[path]
     if (!route) return end(req, res, 404, 'Not found')

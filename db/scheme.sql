@@ -14,11 +14,20 @@ CREATE TABLE IF NOT EXISTS settings (
   value jsonb
 );
 
+-- Create products table
+CREATE TABLE IF NOT EXISTS products (
+  id           serial primary key,
+  slug         text not null UNIQUE,
+  name         text,
+  description  text,
+  url          text,
+  image        text,
+  category     text,
+  updated      timestamp without time zone default (now() at time zone 'utc'),
+  extra jsonb
+);
+
 CREATE INDEX IF NOT EXISTS index_settings_key ON settings (key);
+CREATE INDEX IF NOT EXISTS index_products_category ON products (category);
 
-ALTER TABLE users ADD COLUMN IF NOT EXISTS hash text;
-ALTER TABLE users ADD COLUMN IF NOT EXISTS magic_token text;
-
-
--- Add indexes
--- CREATE INDEX IF NOT EXISTS index_visits_referrer ON visits (referrer);
+ALTER TABLE products ADD COLUMN IF NOT EXISTS slug text not null UNIQUE;

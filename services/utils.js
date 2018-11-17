@@ -70,7 +70,7 @@ const generateHTML = (context = {}) => {
   }
   header {
     width: 100%;
-    background: green;
+    background: #56c3df;
     color: white;
     min-height: 200px;
     display: flex;
@@ -78,6 +78,8 @@ const generateHTML = (context = {}) => {
     align-items: center;
     justify-content: center;
     margin-bottom: 30px;
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important;
+    border: 1px solid rgba(0,0,0,.125);
   }
   header a,
   header a:hover {
@@ -88,6 +90,10 @@ const generateHTML = (context = {}) => {
   }
   body {
     margin-bottom: 30px;
+  }
+  a.card {
+    text-decoration: none;
+    color: #212529
   }
   </style>
 </head>
