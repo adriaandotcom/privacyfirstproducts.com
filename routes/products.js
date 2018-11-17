@@ -1,5 +1,4 @@
 const url = require('url')
-const md5 = require('md5')
 
 const { end, getPost, generateHTML } = require.main.require('./services/utils')
 const { pool } = require.main.require('./db')
