@@ -1,4 +1,5 @@
 const url = require('url')
+const moment = require('moment')
 
 const { end, getPost, generateHTML } = require.main.require('./services/utils')
 const { pool } = require.main.require('./db')
@@ -156,7 +157,7 @@ const getCommentsHTML = (comments, ownerIds) => {
     html += `<div id="comment-${comment.id}" class="media mt-3" ${ isReply ? `style="margin-left: ${ Math.min(deep, 2) * 40 }px;"` : '' }>
       <img class="mr-3" src="${placeholder}" alt="" style="width: 65px; border-radius: 50%;">
       <div class="media-body">
-        <h5 class="mt-0">${comment.name} ${ ownerIds.indexOf(comment.user_id) === -1 ? '' : '<span class="badge my-owner">creator</span>' } <small><a data-toggle="#form-${comment.id}">reply</a></small></h5>
+        <h5 class="mt-0">${comment.name} ${ ownerIds.indexOf(comment.user_id) === -1 ? '' : '<span class="badge my-owner">creator</span>' } <small class="text-muted" title="${moment(comment.created).format()}">${moment(comment.created).fromNow()}</small> <img data-toggle="#form-${comment.id}" style="height: 16px; opacity: 0.6;" src="https://cdn2.iconfinder.com/data/icons/freecns-cumulus/16/519627-127_ArrowLeft-512.png"></h5>
         <p>${ isReply ? `<a href="#comment-${comment.original_id}" class="badge my-primary">reply to ${comment.orignal_user_name.split(' ')[0]}</a>` : '' } ${comment.text.split('\n').join('<br>')}</p>
         <form style="display: none;" class="text-right" method="post" id="form-${comment.id}">
           <input type="hidden" name="original_id" value="${comment.id}">

@@ -110,7 +110,7 @@ const generateHTML = (context = {}) => {
     text-decoration: none;
     color: #212529
   }
-  a {
+  a, [data-toggle] {
     cursor: pointer;
   }
   .media {
