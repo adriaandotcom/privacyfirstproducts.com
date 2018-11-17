@@ -1,3 +1,7 @@
+const url = require('url')
+const jwt = require('jsonwebtoken')
+const crypto = require('crypto')
+
 const { end, getPost, generateHTML } = require.main.require('./services/utils')
 const { send } = require.main.require('./services/mailgun')
 const { pool } = require.main.require('./db')
@@ -27,7 +31,24 @@ const randomString = (length = 15) => {
 
 module.exports = {
   get: async (req, res) => {
-    return end(req, res, 200, template + form)
+    const { query: { token } } = url.parse(req.url, true)
+    if (!token) return end(req, res, 200, template + form)
+
+    const { rows } = await pool.query('SELECT email FROM users WHERE magic_token LIKE $1', [token])
+    if (!rows.length) return end(req, res, 401, `${template}<div class="alert alert-danger" role="alert">User token is invalid, try again</div>${form}`)
+    const { email } = rows[0]
+
+    const hash = crypto.createHmac('sha256', process.env.JWT_SECRET).update(email).digest('hex');
+
+    const jwtToken = jwt.sign({
+      exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 90),
+      data: hash
+    }, process.env.JWT_SECRET)
+
+    console.log(jwtToken)
+
+    // login
+    return end(req, res, 200, template + form + jwtToken)
   },
 
   post: async (req, res) => {
