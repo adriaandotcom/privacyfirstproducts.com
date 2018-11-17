@@ -26,7 +26,7 @@ module.exports = {
     const { rows } = await pool.query(queryProducts)
     let html = `
     <div class="container">
-      <header style="background-image: url('https://assets.adriaan.io/images/maker/privacy-image.svg');">
+      <header class="hide-background-mobile" style="background-image: url('https://assets.adriaan.io/images/maker/privacy-image.svg');">
         <div>
           <h1><a href="/">PRIVACY FIRST PRODUCTS</a></h1>
           <h2 class="fat">Talk about products<br>that care about you.</h2>
@@ -84,7 +84,7 @@ module.exports = {
             <p class="card-text" style="min-height: 48px;">${ product.description ? product.description : '&nbsp;' }</p>
             <div class="d-flex justify-content-between align-items-center">
               <a class="btn-group">
-                <button type="button" onclick="window.location.href = '/products/${product.slug}#comments'" class="btn btn-sm btn-outline-secondary">Comment</button>
+                <button type="button" onclick="window.location.href = '/products/${product.slug}#comments'" class="d-none d-md-block btn btn-sm btn-outline-secondary">Comment</button>
                 <button type="button" onclick="window.location.href = '/products/${product.slug}'" class="btn btn-sm btn-outline-secondary">View</button>
               </a>
               <div class="btn-group">
