@@ -9,6 +9,7 @@ SELECT
     comments.created,
     comments.id,
     comments.original_id,
+    users.id AS user_id,
     users.name,
     originalUsers.name AS orignal_user_name
 FROM
@@ -28,7 +29,7 @@ SELECT
     name
 FROM (
     SELECT
-        unnest(products.owners) AS OWNER
+        unnest(products.owners) AS owner
     FROM
         products
     WHERE
@@ -57,7 +58,7 @@ module.exports = {
           <p class="mt-4 small text-muted">← <a href="/">homepage</a></p>
           <h2 class="fat mt-4">${product.name}</h2>
           <p style="font-size: 120%;">${product.description}</p>
-          ${ owners.length ? `<p>${ owners.length === 1 ? 'Owner is' : 'Owners are' } ${owners.map(i => i.name).join(', ')}</p>` : `` }
+          ${ owners.length ? `<p>${ owners.length === 1 ? 'Creator is' : 'Creators are' } ${owners.map(i => i.name).join(', ')}</p>` : `` }
           ${ product.image ? `<div class="card" style="width: 350px;"><div class="card-img-top"><img style="max-width: 100%;" src="${product.image}" alt="product.name"></div></div>` : `` }
 
 
@@ -65,7 +66,7 @@ module.exports = {
       `
 
       const { rows: comments } = await pool.query(commentsQuery, [product.id])
-      if (comments.length) html += getCommentsHTML(comments)
+      if (comments.length) html += getCommentsHTML(comments, owners.map(i => i.id))
       else html += `<p>No comments yet. Write you experience if you know this product.</p>`
 
       html += `${ email ? `
@@ -140,7 +141,7 @@ module.exports = {
   }
 }
 
-const getCommentsHTML = (comments) => {
+const getCommentsHTML = (comments, ownerIds) => {
   let html = ''
   let deep = 0
 
@@ -155,7 +156,7 @@ const getCommentsHTML = (comments) => {
     html += `<div id="comment-${comment.id}" class="media mt-3" ${ isReply ? `style="margin-left: ${ Math.min(deep, 2) * 40 }px;"` : '' }>
       <img class="mr-3" src="${placeholder}" alt="" style="width: 65px; border-radius: 50%;">
       <div class="media-body">
-        <h5 class="mt-0">${comment.name} <small><a data-toggle="#form-${comment.id}">reply</a></small></h5>
+        <h5 class="mt-0">${comment.name} ${ ownerIds.indexOf(comment.user_id) === -1 ? '' : '<span class="badge my-owner">creator</span>' } <small><a data-toggle="#form-${comment.id}">reply</a></small></h5>
         <p>${ isReply ? `<a href="#comment-${comment.original_id}" class="badge my-primary">reply to ${comment.orignal_user_name.split(' ')[0]}</a>` : '' } ${comment.text.split('\n').join('<br>')}</p>
         <form style="display: none;" class="text-right" method="post" id="form-${comment.id}">
           <input type="hidden" name="original_id" value="${comment.id}">

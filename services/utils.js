@@ -186,6 +186,24 @@ const generateHTML = (context = {}) => {
     color: white;
     background-color: #50a7f7;
   }
+  .my-owner {
+    color: white;
+    background-color: #ffd200;
+  }
+  a.my-owner:focus, a.my-owner:hover{
+    color: white;
+    background-color: #ffd200;
+  }
+  .no-underline {
+    text-decoration: none !important;
+  }
+  .text-content {
+    max-width: 700px;
+    line-height: 200%;
+  }
+  .text-content > p {
+    line-height: 200%;
+  }
   .active.color-analytics { background-color: #c600ff; color: white; }
   .active.color-browser { background-color: #ff2dad; color: white; }
   .active.color-comments { background-color: #00ceff; color: white; }

@@ -30,6 +30,7 @@ module.exports = {
         <div>
           <h1><a href="/">PRIVACY FIRST PRODUCTS</a></h1>
           <h2 class="fat">Talk about products<br>that care about you.</h2>
+          <p><a href="/about" class="no-underline">What is this all about?</a></p>
         </div>
       </header>
     </div>
