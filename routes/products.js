@@ -129,7 +129,6 @@ const getCommentsHTML = (comments) => {
   let deep = 0
 
   for (const comment of comments) {
-    console.log(comment)
     const isReply = comment.id != comment.original_id
     // deep = isReply ? deep + 1 : 0
 
