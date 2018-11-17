@@ -44,7 +44,7 @@ module.exports = {
           <p>${product.description}</p>
           ${ product.image ? `<div class="card" style="width: 350px;"><div class="card-img-top"><img style="max-width: 100%;" src="${product.image}" alt="product.name"></div></div>` : `` }
 
-        <h2 class="mt-5">Comments</h2>
+        <h2 class="mt-5" id="comments">Comments</h2>
       `
 
       const { rows: comments } = await pool.query(commentsQuery, [product.id])
