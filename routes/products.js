@@ -22,6 +22,19 @@ ORDER BY
     comments.created ASC
 `
 
+const ownersQuery = `
+SELECT
+    id,
+    name
+FROM (
+    SELECT
+        unnest(products.owners) AS OWNER
+    FROM
+        products
+    WHERE
+        slug = $1) AS products
+    LEFT JOIN users ON users.id = products.owner`
+
 module.exports = {
   get: async (req, res) => {
     const { email } = (req.user) ? req.user : {}
@@ -31,6 +44,7 @@ module.exports = {
       const { pathname: path } = url.parse(req.url)
       const slug = path.slice(10)
 
+      const { rows: owners } = await pool.query(ownersQuery, [slug])
       const { rows } = await pool.query('SELECT id, name, description, url, image, slug FROM products WHERE slug = $1', [slug])
       if (!rows || !rows[0]) return end(req, res, 404, `${template}<div class="alert alert-warning" role="alert">This product is not found. <a href="/">Go back to the homepage</a>.</div>`)
 
@@ -43,6 +57,7 @@ module.exports = {
           <p class="mt-4 small text-muted">← <a href="/">homepage</a></p>
           <h2 class="fat mt-4">${product.name}</h2>
           <p style="font-size: 120%;">${product.description}</p>
+          ${ owners.length ? `<p>${ owners.length === 1 ? 'Owner is' : 'Owners are' } ${owners.map(i => i.name).join(', ')}</p>` : `` }
           ${ product.image ? `<div class="card" style="width: 350px;"><div class="card-img-top"><img style="max-width: 100%;" src="${product.image}" alt="product.name"></div></div>` : `` }
 
 
@@ -141,7 +156,7 @@ const getCommentsHTML = (comments) => {
       <img class="mr-3" src="${placeholder}" alt="" style="width: 65px; border-radius: 50%;">
       <div class="media-body">
         <h5 class="mt-0">${comment.name} <small><a data-toggle="#form-${comment.id}">reply</a></small></h5>
-        <p>${ isReply ? `<a href="#comment-${comment.original_id}" class="badge badge-primary">reply to ${comment.orignal_user_name.split(' ')[0]}</a>` : '' } ${comment.text.split('\n').join('<br>')}</p>
+        <p>${ isReply ? `<a href="#comment-${comment.original_id}" class="badge my-primary">reply to ${comment.orignal_user_name.split(' ')[0]}</a>` : '' } ${comment.text.split('\n').join('<br>')}</p>
         <form style="display: none;" class="text-right" method="post" id="form-${comment.id}">
           <input type="hidden" name="original_id" value="${comment.id}">
           <textarea name="comment" class="form-control mt-2" id="commentBox1343" rows="3"></textarea>

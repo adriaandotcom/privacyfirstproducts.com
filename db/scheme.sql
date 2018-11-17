@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS products (
   url          text,
   image        text,
   category     text,
+  owners       integer [],
   updated      timestamp without time zone default (now() at time zone 'utc'),
   extra jsonb
 );
@@ -41,4 +42,4 @@ CREATE INDEX IF NOT EXISTS index_settings_key ON settings (key);
 CREATE INDEX IF NOT EXISTS index_products_category ON products (category);
 CREATE INDEX IF NOT EXISTS index_comments_original_id ON comments (original_id);
 
--- ALTER TABLE products ADD COLUMN IF NOT EXISTS slug text not null UNIQUE;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS owners integer [];
