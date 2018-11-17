@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon -e js,sql",
-    "heroku": "forever start index.js",
+    "heroku": "forever --minUptime 5000 index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
