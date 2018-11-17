@@ -79,6 +79,13 @@ const generateHTML = (context = {}) => {
     justify-content: center;
     margin-bottom: 30px;
   }
+  header a,
+  header a:hover {
+    color: white;
+  }
+  header h1 a:hover {
+    text-decoration: none;
+  }
   body {
     margin-bottom: 30px;
   }
@@ -87,8 +94,8 @@ const generateHTML = (context = {}) => {
 <body>
 
 <header>
-  <h1>Privacy First Products</h1>
-  ${context.email ? `<p>Logged in as ${context.email}</p>` : ''}
+<h1><a href="/">Privacy First Products</a></h1>
+  ${context.email ? `<p>Logged in as ${context.email}</p>` : '<p><a href="/login">Login</a> or <a href="/register">register</a></p>'}
 </header>
 
 <script async src="https://cdn.simpleanalytics.io/hello.js"></script>
