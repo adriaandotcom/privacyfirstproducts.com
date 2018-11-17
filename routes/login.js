@@ -1,8 +1,6 @@
 const url = require('url')
-const jwt = require('jsonwebtoken')
 
-const { end, getPost, generateHTML } = require.main.require('./services/utils')
-const { send } = require.main.require('./services/mailgun')
+const { end, getPost, generateHTML, loginAndRedirect, sendLoginToken } = require.main.require('./services/utils')
 const { pool } = require.main.require('./db')
 
 const form = `
@@ -21,40 +19,25 @@ const form = `
 
 const template = generateHTML()
 
-const randomString = (length = 15) => {
-  let string = '', chars
-  for (let index = 0; index < length; index++) {
-    if (index % 2) chars = 'bcdfghklmnpqrstvwxyz'
-    else chars = 'aeiou'
-    string += chars.charAt(Math.floor(Math.random() * chars.length))
-  }
-  return string
-}
-
 module.exports = {
   get: async (req, res) => {
-    const { query: { token } } = url.parse(req.url, true)
-    if (!token) return end(req, res, 200, template + form)
+    try {
+      const { query: { token } } = url.parse(req.url, true)
+      if (!token) return end(req, res, 200, template + form)
 
-    const { rows } = await pool.query('SELECT email FROM users WHERE magic_token LIKE $1', [token])
-    if (!rows.length) return end(req, res, 401, `${template}<div class="alert alert-danger" role="alert">User token is invalid, try again</div>${form}`)
-    const { email } = rows[0]
+      const { rows } = await pool.query('SELECT email, extra FROM users WHERE magic_token LIKE $1', [token])
+      if (!rows.length) return end(req, res, 401, `${template}<div class="alert alert-danger" role="alert">User token is invalid, try again</div>${form}`)
+      const { email, extra } = rows[0]
 
-    const expireSeconds = 60 * 60 * 24 * 90
+      const newExtra = (extra && typeof extra === 'object') ? { ...extra, emailValidated: true } : { emailValidated: true }
 
-    const jwtToken = jwt.sign({
-      exp: Math.floor(Date.now() / 1000) + (expireSeconds),
-      data: email
-    }, process.env.JWT_SECRET)
+      await pool.query('UPDATE users SET magic_token = NULL, extra = $1 WHERE magic_token LIKE $2', [JSON.stringify(newExtra), token])
 
-    const now = new Date()
-    const time = now.getTime()
-    now.setTime(time + expireSeconds * 1000)
-
-    res.writeHead(302, {
-      'Set-Cookie': `token=${jwtToken};expires=${now.toGMTString()};path=/`,
-      Location: '/' })
-    return res.end()
+      return loginAndRedirect(res, email)
+    } catch (error) {
+      console.error(error)
+      return end(req, res, 500, `${template}<div class="alert alert-danger" role="alert">${error.message}</div>${form}`)
+    }
   },
 
   post: async (req, res) => {
@@ -67,12 +50,7 @@ module.exports = {
       const { rows } = await pool.query('SELECT FROM users WHERE email LIKE $1', [email])
       if (!rows.length) return end(req, res, 401,  `${template}<div class="alert alert-secondary" role="alert">User is not found, try again</div>${form}`)
 
-      const token = randomString(25)
-      await pool.query('UPDATE users SET magic_token = $1 WHERE email LIKE $2', [token, email])
-
-      // Send email with login code
-      const text = `Hi there 👋,\n\nHere is you login link: https://privacyfirstproducts.com/login?token=${token}\n\nRegards,\nAdriaan`
-      await send({ text, to: email, subject: 'Your link to login on Privacy First Products' })
+      await sendLoginToken(email)
 
       return end(req, res, 200,  `${template}<div class="alert alert-success" role="alert">Magic link sent to your inbox, click it to login.</div>${form}`)
     } catch (error) {
@@ -80,5 +58,5 @@ module.exports = {
       const message = (error.message.indexOf('unique constraint') >= 0) ? 'Email is already in use, try other email or login this one.' : error.message
       return end(req, res, 401,  `${template}<div class="alert alert-danger" role="alert">${message}</div>${form}`)
     }
-  }
+  },
 }

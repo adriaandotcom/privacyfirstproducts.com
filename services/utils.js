@@ -1,5 +1,8 @@
 const url = require('url')
 const { parse } = require('querystring')
+const jwt = require('jsonwebtoken')
+const { send } = require.main.require('./services/mailgun')
+const { pool } = require.main.require('./db')
 
 const end = (req, res, code = 400, body, contentType = 'text/html') => {
   res.statusCode = code
@@ -224,7 +227,7 @@ const generateHTML = (context = {}) => {
 
 <div class="container">
   <nav>
-    ${context.email ? `<p>Logged in as ${context.email}</p>` : '<p><a href="/login">Login</a> or <a href="/register">register</a></p>'}
+    ${context.email ? `<p>Logged in as ${context.email} <a href="/logout">logout</a></p>` : '<p><a href="/login">Login</a> or <a href="/register">register</a></p>'}
   </nav>
 </div>
 
@@ -233,8 +236,58 @@ const generateHTML = (context = {}) => {
 
 }
 
+const loginAndRedirect = (res, email) => {
+  const expireSeconds = 60 * 60 * 24 * 90
+
+  const jwtToken = jwt.sign({
+    exp: Math.floor(Date.now() / 1000) + (expireSeconds),
+    data: email
+  }, process.env.JWT_SECRET)
+
+  const now = new Date()
+  const time = now.getTime()
+  now.setTime(time + expireSeconds * 1000)
+
+  res.writeHead(302, {
+    'Set-Cookie': `token=${jwtToken};expires=${now.toGMTString()};path=/`,
+    Location: '/' })
+  return res.end()
+}
+
+const randomString = (length = 15) => {
+  let string = '', chars
+  for (let index = 0; index < length; index++) {
+    if (index % 2) chars = 'bcdfghklmnpqrstvwxyz'
+    else chars = 'aeiou'
+    string += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+  return string
+}
+
+const sendLoginToken = (email, firstTime = false) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const token = randomString(25)
+      await pool.query('UPDATE users SET magic_token = $1 WHERE email LIKE $2', [token, email])
+
+      const subject = firstTime ? 'Welcome to Privacy First Products' : 'Your link to login on Privacy First Products'
+
+      // Send email with login code
+      const text = `Hi there 👋,\n\nHere is you login link: https://privacyfirstproducts.com/login?token=${token}\n\nRegards,\nPrivacy First Products`
+      await send({ text, to: email, subject })
+
+      resolve()
+    } catch (error) {
+      console.error(error)
+      reject(error)
+    }
+  })
+}
+
 module.exports = {
   end,
   generateHTML,
-  getPost
+  getPost,
+  loginAndRedirect,
+  sendLoginToken
 }

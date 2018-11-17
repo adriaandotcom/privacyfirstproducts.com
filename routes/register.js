@@ -1,4 +1,4 @@
-const { end, getPost, generateHTML } = require.main.require('./services/utils')
+const { end, getPost, generateHTML, sendLoginToken } = require.main.require('./services/utils')
 const { pool } = require.main.require('./db')
 
 const form = `
@@ -37,9 +37,9 @@ module.exports = {
     try {
       await pool.query('INSERT INTO users (name, email) VALUES ($1, $2)', [name, email])
 
-      // Redirect to homepage
-      res.writeHead(302, { Location: '/' })
-      return res.end()
+      await sendLoginToken(email, true)
+
+      return end(req, res, 200,  `${template}<div class="alert alert-success" role="alert">Welcome email is sent to your inbox, click the link in the email to finish your registration.</div>${form}`)
     } catch (error) {
       console.error(error)
       const message = (error.message.indexOf('unique constraint') >= 0) ? 'Email is already in use, try other email or login this one.' : error.message
