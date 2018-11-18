@@ -81,7 +81,7 @@ module.exports = {
         <div class="card card--scale mb-4">
           ${ product.image ? `<a href="/products/${product.slug}" class="card-img-top" style="height: 225px; background-size: cover; background-position: center center; background-image: url('${product.image}')"></a>` : `<a href="/products/${product.slug}"><img class="card-img-top" data-src="holder.js/100px225?theme=thumb&bg=f0f9ff&fg=55595c&text=${product.name}" alt="${product.name}"></a>` }
           <div class="card-body">
-            <p class="card-text" style="min-height: 48px;">${ product.description ? product.description : '&nbsp;' }</p>
+            <p class="card-text" style="min-height: 48px;">${ product.name } ${ product.description ? `&#8212; ${product.description}` : '' }</p>
             <div class="d-flex justify-content-between align-items-center">
               <a class="btn-group">
                 <button type="button" onclick="window.location.href = '/products/${product.slug}#comments'" class="d-none d-md-block btn btn-sm btn-outline-secondary">Comment</button>

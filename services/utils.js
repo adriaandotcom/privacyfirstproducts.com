@@ -225,6 +225,22 @@ const generateHTML = (context = {}) => {
   .active.color-shortener { background-color: #c600ff; color: white; }
   .active.color-social-network { background-color: #ff2dad; color: white; }
   .active.color-vpn { background-color: #00ceff; color: white; }
+  p.card-text {
+    height: 48px;
+    overflow: hidden;
+    position: relative;
+    word-break: normal;
+  }
+  p.card-text::after {
+    content: "";
+    font-weight: bold;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-image: linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 70%);
+    height: 24px;
+    width: 80px;
+  }
   </style>
 </head>
 <body>
