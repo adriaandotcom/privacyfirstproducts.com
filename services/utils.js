@@ -117,7 +117,7 @@ const generateHTML = (context = {}) => {
     text-decoration: none;
     color: #212529
   }
-  a, [data-toggle] {
+  a, [data-toggle], [data-category] {
     cursor: pointer;
   }
   .media {
@@ -173,7 +173,6 @@ const generateHTML = (context = {}) => {
     border-radius: 10px;
     margin: 15px;
     box-shadow: 0 0 14px 4px #ced5d659, 0 0px 3px 1px #e9f0f140;
-    cursor: pointer;
   }
   a.badge:hover,
   a.btn-group:hover {
