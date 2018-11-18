@@ -48,7 +48,7 @@ const generateHTML = (context = {}) => {
   <title>Privacy First Products</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="A list of Privacy First Products, where you can explore products designed with your privacy in mind and interact with their creators. We also help privacy first businesses so they can interact with their potiential customers.">
+  <meta name="description" content="A list of Privacy First Products where you can explore products designed with your privacy in mind and interact with their creators. We also help privacy first businesses so they can interact with their potiential customers.">
   <meta name="og:image" content="https://assets.adriaan.io/images/maker/social-image.jpg">
   <meta name="twitter:image" content="https://assets.adriaan.io/images/maker/social-image.jpg">
   <link rel="shortcut icon" type="image/png" href="https://assets.adriaan.io/images/maker/icon.png"/>
