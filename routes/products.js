@@ -57,7 +57,7 @@ module.exports = {
         <script src="https://cdn.rawgit.com/imsky/holder/master/holder.js"></script>
         <div class="container"><div class="row"><div class="col-md-7 col-sm-12">
           <p class="mt-4 small text-muted">← <a href="/">homepage</a></p>
-          <h2 class="fat mt-4">${product.name}</h2>
+          <h2 class="fat mt-4"><a style="color: #001836;" target="_blank" href="${product.url}">${product.name}</a></h2>
           <p style="font-size: 120%;">${product.description}</p>
           ${ owners.length ? `<p>${ owners.length === 1 ? 'Creator is' : 'Creators are' } ${owners.map(i => i.name).join(', ')}</p>` : `` }
           ${ product.image ? `<div class="card" style="width: 350px;"><div class="card-img-top"><img style="max-width: 100%;" src="${product.image}" alt="product.name"></div></div>` : `` }
