@@ -51,7 +51,15 @@ const generateHTML = (context = {}) => {
   <meta name="description" content="A list of Privacy First Products where you can explore products designed with your privacy in mind and interact with their creators. We also help privacy first businesses so they can interact with their potiential customers.">
   <meta name="og:image" content="https://assets.adriaan.io/images/maker/social-image.jpg">
   <meta name="twitter:image" content="https://assets.adriaan.io/images/maker/social-image.jpg">
-  <link rel="shortcut icon" type="image/png" href="https://assets.adriaan.io/images/maker/icon.png"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="https://assets.adriaan.io/images/maker/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://assets.adriaan.io/images/maker/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://assets.adriaan.io/images/maker/favicon/favicon-16x16.png">
+  <link rel="manifest" href="https://assets.adriaan.io/images/maker/favicon/site.webmanifest">
+  <link rel="mask-icon" href="https://assets.adriaan.io/images/maker/favicon/safari-pinned-tab.svg" color="#ff2dad">
+  <link rel="shortcut icon" href="https://assets.adriaan.io/images/maker/favicon/favicon.ico">
+  <meta name="msapplication-TileColor" content="#9f00a7">
+  <meta name="msapplication-config" content="https://assets.adriaan.io/images/maker/favicon/browserconfig.xml">
+  <meta name="theme-color" content="#ff2dad">
   <script>
     NodeList.prototype.forEach = Array.prototype.forEach;
     HTMLCollection.prototype.forEach = Array.prototype.forEach;
